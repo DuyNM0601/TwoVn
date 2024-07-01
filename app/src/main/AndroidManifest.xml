@@ -19,6 +19,8 @@
         <activity
             android:name=".ProductDetail"
             android:exported="false" />
+        <activity android:name=".QldnActivity"></activity>
+        <activity android:name=".TtcnActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
