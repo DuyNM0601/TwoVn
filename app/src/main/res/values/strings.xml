@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TwoVn</string>
+    <string name="search">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_home">Trang chủ</string>
+    <string name="title_profile">Tài khoản</string>
+    <string name="title_add_to_cart">Thêm vào giỏ hàng</string>
+</resources>

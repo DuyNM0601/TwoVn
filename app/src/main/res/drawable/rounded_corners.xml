@@ -1,0 +1,6 @@
+<!-- rounded_corners.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@android:color/transparent" /> <!-- Màu nền của ImageView -->
+    <corners android:radius="16dp" /> <!-- Bán kính bo tròn là 16dp, bạn có thể điều chỉnh theo ý muốn -->
+</shape>
