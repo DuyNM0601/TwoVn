@@ -38,12 +38,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         Picasso.get().load(product.getUrlImg()).into(holder.imageView);
         holder.textViewTen.setText(product.getName());
-        holder.textViewGia.setText(String.valueOf(product.getPrice()));
+        holder.textViewGia.setText(String.format("%,dđ", (int) product.getPrice()));
         holder.textViewDescription.setText(product.getDescription());
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetail.class);
-            intent.putExtra("productId", product.getId());
+            intent.putExtra("productId", product.get_id());
             context.startActivity(intent);
         });
     }

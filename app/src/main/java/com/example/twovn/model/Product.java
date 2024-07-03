@@ -1,33 +1,28 @@
 package com.example.twovn.model;
 
 public class Product {
-    private long id;
+    private String _id;
     private String name;
     private String description;
     private String urlImg;
     private int price;
+    private int quantity;
 
-    public Product(String name, String description, String urlImg, int price) {
+    public Product(String _id, String name, String description, String urlImg, int price, int quantity) {
+        this._id = _id;
         this.name = name;
         this.description = description;
         this.urlImg = urlImg;
         this.price = price;
+        this.quantity = quantity;
     }
 
-    public Product(long id, String name, String description, String urlImg, int price) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.urlImg = urlImg;
-        this.price = price;
+    public String get_id() {
+        return _id;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+    public void set_id(String _id) {
+        this._id = _id;
     }
 
     public String getName() {
@@ -54,11 +49,19 @@ public class Product {
         this.urlImg = urlImg;
     }
 
-    public int getPrice() { // Thay đổi từ double thành int
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) { // Thay đổi từ double thành int
+    public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

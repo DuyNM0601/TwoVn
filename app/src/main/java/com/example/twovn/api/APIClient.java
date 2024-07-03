@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class APIClient {
-    private static String baseURL = "https://666b95bc49dbc5d7145a8c6b.mockapi.io/"; // Ensure this ends with /
+    private static String baseURL = "https://computer-shop-steel.vercel.app/"; // Ensure this ends with /
     private static Retrofit retrofit;
 
     public static Retrofit getClient(){

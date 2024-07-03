@@ -2,14 +2,21 @@ package com.example.twovn;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.twovn.adapter.ProductAdapter;
 import com.example.twovn.model.Product;
+import com.example.twovn.repo.CartRepository;
 import com.example.twovn.repo.ProductRepository;
 import com.example.twovn.service.ProductService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -46,8 +53,8 @@ public class ProductDetail extends AppCompatActivity {
         productAdapter = new ProductAdapter(this, relatedProducts);
         recyclerViewRelatedProducts.setAdapter(productAdapter);
 
-        long productId = getIntent().getLongExtra("productId", -1);
-        if (productId != -1) {
+        String productId = getIntent().getStringExtra("productId");
+        if (productId != null) {
             fetchProductDetails(productId);
             fetchRelatedProducts(productId);
         }
@@ -64,7 +71,7 @@ public class ProductDetail extends AppCompatActivity {
         });
     }
 
-    private void fetchProductDetails(long productId) {
+    private void fetchProductDetails(String productId) {
         ProductService productService = ProductRepository.getProductService();
         productService.getProductById(productId).enqueue(new Callback<Product>() {
             @Override
@@ -85,14 +92,14 @@ public class ProductDetail extends AppCompatActivity {
         });
     }
 
-    private void fetchRelatedProducts(long productId) {
+    private void fetchRelatedProducts(String productId) {
         ProductService productService = ProductRepository.getProductService();
         productService.getAllProduct().enqueue(new Callback<Product[]>() {
             @Override
             public void onResponse(Call<Product[]> call, Response<Product[]> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     for (Product product : response.body()) {
-                        if (product.getId() != productId) {
+                        if (!product.get_id().equals(productId)) {
                             relatedProducts.add(product);
                         }
                     }
@@ -109,8 +116,8 @@ public class ProductDetail extends AppCompatActivity {
 
     private void addToCart(Product product) {
         if (product != null) {
-            // Implement your logic to add the product to the cart
-            // For example, you can save it to a local database or shared preferences
+            CartRepository.getInstance().addProductToCart(product);
+            Toast.makeText(this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
         }
     }
 }
