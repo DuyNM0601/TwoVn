@@ -1,6 +1,7 @@
 package com.example.twovn;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.twovn.adapter.CartAdapter;
+import com.example.twovn.model.Account;
 import com.example.twovn.model.Product;
+import com.example.twovn.repo.AccountRepository;
 import com.example.twovn.repo.CartRepository;
 import com.example.twovn.utils.VNPayUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,6 +46,7 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
     private CartAdapter cartAdapter;
     private List<Product> cartProductList = new ArrayList<>();
     private TextView totalAmountTextView, shippingFeeTextView, grandTotalTextView;
+    private TextView userNameTextView, userEmailTextView, userPhoneNumberTextView, userAddressTextView;
     private Button buttonPlaceOrder;
     private RadioGroup paymentMethodRadioGroup;
     private Spinner branchSpinner;
@@ -74,6 +78,11 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         paymentMethodRadioGroup = findViewById(R.id.paymentMethodRadioGroup);
         branchSpinner = findViewById(R.id.branchSpinner);
         branchMapView = findViewById(R.id.branchMapView);
+
+        userNameTextView = findViewById(R.id.userNameTextView);
+        userEmailTextView = findViewById(R.id.userEmailTextView);
+        userPhoneNumberTextView = findViewById(R.id.userPhoneNumberTextView);
+        userAddressTextView = findViewById(R.id.userAddressTextView);
 
         branchMapView.onCreate(savedInstanceState);
         branchMapView.getMapAsync(this);
@@ -107,12 +116,42 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
             updateTotalAmount(totalAmount);
         }
 
+        loadUserInfo();
+
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 placeOrder();
             }
         });
+    }
+
+    private void loadUserInfo() {
+        // Lấy thông tin từ SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("MySession", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+
+        if (userId != null) {
+            AccountRepository.getAccountService().getAccountById(userId).enqueue(new Callback<Account>() {
+                @Override
+                public void onResponse(Call<Account> call, Response<Account> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        Account account = response.body();
+                        userNameTextView.setText(account.getUserName());
+                        userEmailTextView.setText(account.getEmail());
+                        userPhoneNumberTextView.setText(account.getPhoneNumber());
+                        userAddressTextView.setText(account.getAddress());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Account> call, Throwable t) {
+                    Log.e("OrderSummaryActivity", "Error loading user info: " + t.getMessage());
+                }
+            });
+        } else {
+            Log.e("OrderSummaryActivity", "UserId is null");
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.example.twovn.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.twovn.R;
+import com.example.twovn.api.APIClient;
+import com.example.twovn.model.Cart;
 import com.example.twovn.model.Product;
+import com.example.twovn.service.CartService;
 import com.squareup.picasso.Picasso;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.List;
 
@@ -22,6 +30,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     private Context context;
     private List<Product> cartProductList;
     private OnQuantityChangeListener quantityChangeListener;
+    private SharedPreferences sharedPreferences;
     private boolean showButtons; // Biến để quyết định xem có hiển thị ImageButton cộng và trừ hay không
 
     public interface OnQuantityChangeListener {
@@ -73,6 +82,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, cartProductList.size());
                     quantityChangeListener.onQuantityChanged();
+
+                    // Lấy accountId từ SharedPreferences
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("MySession", Context.MODE_PRIVATE);
+                    String accountId = sharedPreferences.getString("userId", null);
+
+                    // Kiểm tra accountId không bị null
+                    if (accountId != null) {
+                        Cart cartItem = new Cart(accountId, product.get_id());
+                        deleteCartItem(cartItem);
+                    } else {
+                        Log.e("CartAdapter", "accountId is null");
+                    }
                 }
             });
 
@@ -87,7 +108,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
     }
 
-
     @Override
     public int getItemCount() {
         return cartProductList.size();
@@ -97,6 +117,32 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.cartProductList = cartProductList;
         notifyDataSetChanged();
     }
+
+    private void deleteCartItem(Cart cartItem) {
+        String accountId = cartItem.getAccountId();
+        String productId = cartItem.getProductId();
+
+        // Khởi tạo service và gọi API
+        CartService cartService = APIClient.getClient().create(CartService.class);
+        Call<Void> call = cartService.deleteCartItem(accountId, productId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("CartAdapter", "Deleted cart item successfully");
+                } else {
+                    Log.d("CartAdapter", "Failed to delete cart item");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("CartAdapter", "Error deleting cart item: " + t.getMessage());
+            }
+        });
+    }
+
+
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
 
