@@ -4,6 +4,7 @@ public class Auth {
     private String email;
     private String userName;
     private String password;
+    private String sub;
 
     public Auth(String email, String userName, String password) {
         this.email = email;
@@ -33,5 +34,13 @@ public class Auth {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getSub() {
+        return sub;
+    }
+
+    public void setSub(String sub) {
+        this.sub = sub;
     }
 }

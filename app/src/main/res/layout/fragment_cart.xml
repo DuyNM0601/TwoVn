@@ -19,11 +19,12 @@
         android:textStyle="bold"
         android:paddingVertical="8dp" />
 
+
     <Button
-        android:id="@+id/buttonCheckout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/buttonCheckout"
         android:text="Thanh toán"
-        android:background="@color/design_default_color_primary"
-        android:textColor="@android:color/white" />
+        android:textSize="18sp"
+        android:backgroundTint="#F4BF7E" />
 </LinearLayout>

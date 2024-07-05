@@ -1,20 +1,67 @@
 package com.example.twovn.model;
 
-public class Product {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Product implements Parcelable {
     private String _id;
     private String name;
     private String description;
-    private String urlImg;
+    private String imageUrl;
     private int price;
     private int quantity;
 
-    public Product(String _id, String name, String description, String urlImg, int price, int quantity) {
+    public Product(String _id, String name, String description, String imageUrl, int price, int quantity) {
         this._id = _id;
         this.name = name;
         this.description = description;
-        this.urlImg = urlImg;
+        this.imageUrl = imageUrl;
         this.price = price;
         this.quantity = quantity;
+    }
+
+    public Product(String _id, String name, String imageUrl, int price) {
+        this._id = _id;
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.price = price;
+        this.quantity = 1;
+    }
+
+    protected Product(Parcel in) {
+        _id = in.readString();
+        name = in.readString();
+        description = in.readString();
+        imageUrl = in.readString();
+        price = in.readInt();
+        quantity = in.readInt();
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(_id);
+        dest.writeString(name);
+        dest.writeString(description);
+        dest.writeString(imageUrl);
+        dest.writeInt(price);
+        dest.writeInt(quantity);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public String get_id() {
@@ -42,11 +89,11 @@ public class Product {
     }
 
     public String getUrlImg() {
-        return urlImg;
+        return imageUrl;
     }
 
-    public void setUrlImg(String urlImg) {
-        this.urlImg = urlImg;
+    public void setUrlImg(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public int getPrice() {

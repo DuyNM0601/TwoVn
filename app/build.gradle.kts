@@ -35,6 +35,10 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.71828")
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
     implementation ("com.google.code.gson:gson:2.8.6")
+    implementation ("com.google.android.gms:play-services-maps:18.0.2")
+    implementation ("androidx.core:core:1.7.0")
+    implementation ("androidx.appcompat:appcompat:1.4.1")
+
 
     implementation(libs.appcompat)
     implementation(libs.material)

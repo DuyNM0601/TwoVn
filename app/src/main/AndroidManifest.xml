@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +19,17 @@
         android:theme="@style/Theme.TwoVn"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCV4NdCBT6wPrNODodzF5htjx39zbGNd1M" />
         <activity
-            android:name=".MainActivity"
+            android:name=".OrderSummaryActivity"
             android:exported="false" />
         <activity
             android:name=".LoginSignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SignUpActivity"
             android:exported="false" /> <!-- Activities của ứng dụng -->
         <activity
             android:name=".PaymentActivity"
@@ -29,25 +37,25 @@
         <activity
             android:name=".ProductDetail"
             android:exported="false" />
-        <activity android:name=".QldnActivity" />
-        <activity android:name=".TtcnActivity" /> <!-- MainActivity với intent-filter để xử lý URL Scheme -->
         <activity
-            android:name=".SignUpActivity"
+            android:name=".QldnActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
-            <!-- Định nghĩa một intent-filter để xử lý URL Scheme -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Đặt URL Scheme của ứng dụng -->
                 <data android:scheme="twovn" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".TtcnActivity" /> <!-- MainActivity với intent-filter để xử lý URL Scheme -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

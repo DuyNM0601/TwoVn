@@ -1,19 +1,21 @@
 package com.example.twovn;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.twovn.adapter.ProductAdapter;
 import com.example.twovn.model.Product;
 import com.example.twovn.repo.CartRepository;
@@ -21,8 +23,10 @@ import com.example.twovn.repo.ProductRepository;
 import com.example.twovn.service.ProductService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -79,7 +83,7 @@ public class ProductDetail extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     currentProduct = response.body();
                     textViewName.setText(currentProduct.getName());
-                    textViewPrice.setText(String.valueOf(currentProduct.getPrice()));
+                    textViewPrice.setText(String.format("%,dđ", currentProduct.getPrice()));
                     textViewDescription.setText(currentProduct.getDescription());
                     Picasso.get().load(currentProduct.getUrlImg()).into(imageViewProduct); // Load image using Picasso
                 }
@@ -116,8 +120,18 @@ public class ProductDetail extends AppCompatActivity {
 
     private void addToCart(Product product) {
         if (product != null) {
-            CartRepository.getInstance().addProductToCart(product);
-            Toast.makeText(this, "Đã thêm sản phẩm vào giỏ hàng", Toast.LENGTH_SHORT).show();
+            if (checkUserLoggedIn()) {
+                CartRepository.getInstance(this).addProductToCart(product.get_id());
+            } else {
+                Intent intent = new Intent(this, LoginSignUpActivity.class);
+                startActivity(intent);
+                Toast.makeText(this, "Bạn cần đăng nhập để thực hiện thao tác này", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    private boolean checkUserLoggedIn() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MySession", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isLoggedIn", false);
     }
 }

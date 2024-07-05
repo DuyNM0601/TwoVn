@@ -28,18 +28,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageView" />
 
-    <TextView
-        android:id="@+id/textViewDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="Mô tả sản phẩm"
-        android:gravity="center"
-        android:textSize="17sp"
-        android:textColor="#2896DF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewTen" />
 
     <TextView
         android:id="@+id/textViewGia"
@@ -51,6 +39,6 @@
         android:textColor="#E15C5C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewDescription" />
+        app:layout_constraintTop_toBottomOf="@id/textViewTen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

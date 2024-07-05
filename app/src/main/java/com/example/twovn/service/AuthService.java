@@ -30,4 +30,6 @@ public interface AuthService {
 
     @POST(AUTH + "/register")
     Call<Auth> registerUser(@Body Auth auth);
+    @POST(AUTH + "/login")
+    Call<Auth> loginUser(@Body Auth auth);
 }

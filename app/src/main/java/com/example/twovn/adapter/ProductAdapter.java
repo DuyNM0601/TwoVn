@@ -39,7 +39,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Picasso.get().load(product.getUrlImg()).into(holder.imageView);
         holder.textViewTen.setText(product.getName());
         holder.textViewGia.setText(String.format("%,dđ", (int) product.getPrice()));
-        holder.textViewDescription.setText(product.getDescription());
 
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, ProductDetail.class);
