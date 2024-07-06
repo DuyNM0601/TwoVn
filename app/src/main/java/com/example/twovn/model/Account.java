@@ -13,6 +13,10 @@ public class Account {
         this.phoneNumber = phoneNumber;
     }
 
+    public Account() {
+
+    }
+
     public String getEmail() {
         return email;
     }

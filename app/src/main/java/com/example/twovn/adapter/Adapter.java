@@ -1,14 +1,15 @@
 package com.example.twovn.adapter;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.twovn.ViewPapper;
+import com.example.twovn.ChoThanhToanFragment;
+import com.example.twovn.DangGiaoHangFragment;
+import com.example.twovn.HoanThanhFragment;
+import com.example.twovn.OrderSuccessful;
 
 public class Adapter extends FragmentStateAdapter {
 
@@ -19,11 +20,19 @@ public class Adapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Fragment fragment = new ViewPapper();
-        Bundle bundle = new Bundle();
-        bundle.putString(ViewPapper.Title, "Tab"+(position+1));
-        fragment.setArguments(bundle);
-        return fragment;
+        switch (position) {
+            case 0:
+                // Return a new instance of the fragment for the "Chờ thanh toán" tab
+                return new OrderSuccessful();
+            case 1:
+                // Return a new instance of the fragment for the "Đang giao hàng" tab
+                return new DangGiaoHangFragment();
+            case 2:
+                // Return a new instance of the fragment for the "Hoàn thành" tab
+                return new HoanThanhFragment();
+            default:
+                return new Fragment();
+        }
     }
 
     @Override

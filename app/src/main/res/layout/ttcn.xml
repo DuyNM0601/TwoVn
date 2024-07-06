@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Thông tin cá nhân"
-            android:textSize="15dp"
+            android:textSize="30dp"
             android:textColor="#938D8D"
             android:background="#D5D0D0"
             android:paddingLeft="20dp"
@@ -39,11 +39,12 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:textStyle="bold"
-            android:textSize="10dp"/>
+            android:textSize="20dp"/>
        <EditText
+           android:id="@+id/edtName"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:textSize="10dp"
+           android:textSize="15dp"
            android:layout_marginLeft="20dp"
            android:layout_marginRight="20dp"
 
@@ -56,93 +57,38 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:textStyle="bold"
-            android:textSize="10dp"
+            android:textSize="20dp"
             />
         <EditText
+            android:id="@+id/edtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
+            android:textSize="15dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-
+            android:enabled="false"
             />
         <TextView
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Số điện thoại"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:textStyle="bold"
-            android:textSize="10dp"/>
+            android:textSize="20dp"/>
         <EditText
+            android:id="@+id/edtPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
+            android:textSize="15dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
 
             />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ngày sinh"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textStyle="bold"
-            android:textSize="10dp"
-            />
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="200dp"
 
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Giới tính"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textStyle="bold"
-            android:textSize="10dp"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="20dp">
-            <RadioGroup
-                android:id="@+id/radioGroupGender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/radioMale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="10dp"
-                    android:text="Nam" />
 
-                <RadioButton
-                    android:id="@+id/radioFemale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nữ"
-                    android:textSize="10dp"
-                    android:layout_marginLeft="20dp"/>
-
-                <RadioButton
-                    android:id="@+id/radioOther"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Khác"
-                    android:textSize="10dp"
-                    android:layout_marginLeft="20dp"/>
-            </RadioGroup>
-        </LinearLayout>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -153,22 +99,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Địa chỉ mặc định"
-            android:textSize="15dp"
+            android:textSize="30dp"
             android:textColor="#938D8D"
             android:background="#D5D0D0"
             android:paddingLeft="20dp"
             android:textStyle="bold"
             />
         <EditText
+            android:id="@+id/edtAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
+            android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:text="Đại học fpt"
+            android:textStyle="bold"
 
             />
         <Button
+            android:id="@+id/btnsave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Lưu"
@@ -177,18 +126,26 @@
             android:layout_marginTop="20dp"
             android:background="#002AFF"
             android:textColor="#FFFFFF"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:layout_gravity="center"
 
             />
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20dp"
+            android:background="#002AFF"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            android:text="Đăng xuất" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="300dp"
-        android:text="Đăng xuất" />
+
 
 </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
