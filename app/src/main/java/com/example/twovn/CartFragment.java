@@ -19,6 +19,8 @@ import com.example.twovn.adapter.CartAdapter;
 import com.example.twovn.model.Cart;
 import com.example.twovn.model.Product;
 import com.example.twovn.repo.CartRepository;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.badge.BadgeDrawable;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
     private List<Product> cartProductList = new ArrayList<>();
     private TextView totalAmountTextView;
     private Button buttonCheckout;
+    private BottomNavigationView bottomNavigationView;
 
     @Nullable
     @Override
@@ -56,6 +59,8 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
             }
         });
 
+        bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
+
         loadCartProducts();
 
         return view;
@@ -64,6 +69,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
     @Override
     public void onQuantityChanged() {
         updateTotalAmount();
+        updateCartBadge();
     }
 
     private void updateTotalAmount() {
@@ -72,6 +78,19 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
             totalAmount += product.getPrice() * product.getQuantity();
         }
         totalAmountTextView.setText(String.format("%,.0f đ", totalAmount));
+    }
+
+    private void updateCartBadge() {
+        int itemCount = cartAdapter.getItemCount();
+
+        if (itemCount > 0) {
+            BadgeDrawable badge = bottomNavigationView.getOrCreateBadge(R.id.navigation_giohang);
+            badge.setNumber(itemCount);
+            badge.setBackgroundColor(getResources().getColor(android.R.color.holo_red_dark));
+            badge.setVisible(true);
+        } else {
+            bottomNavigationView.removeBadge(R.id.navigation_giohang);
+        }
     }
 
     private void loadCartProducts() {
@@ -88,11 +107,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
                                 cartItem.getImageUrl(),
                                 cartItem.getPrice()
                         );
-                        product.setQuantity(1); // Set the quantity from the cart item
+                        product.setQuantity(1);
                         cartProductList.add(product);
                     }
                     cartAdapter.notifyDataSetChanged();
                     updateTotalAmount();
+                    updateCartBadge();
                 } else {
                     Toast.makeText(getContext(), "Failed to load cart products", Toast.LENGTH_SHORT).show();
                 }
@@ -106,10 +126,16 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
     }
 
     private void proceedToCheckout() {
-        Intent intent = new Intent(getActivity(), OrderSummaryActivity.class);
-        intent.putExtra("totalAmount", totalAmountTextView.getText().toString());
-        intent.putParcelableArrayListExtra("cartProductList", new ArrayList<>(cartProductList));
-        startActivity(intent);
+        if (totalAmountTextView.getText().toString().equals("0 đ")){
+            Toast.makeText(getContext(), "Bạn không có sản phẩm nào trong giỏ hàng", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Intent intent = new Intent(getActivity(), OrderSummaryActivity.class);
+            intent.putExtra("totalAmount", totalAmountTextView.getText().toString());
+            intent.putParcelableArrayListExtra("cartProductList", new ArrayList<>(cartProductList));
+            startActivity(intent);
+        }
+
     }
 
     @Override

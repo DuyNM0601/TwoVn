@@ -19,11 +19,12 @@ import com.example.twovn.model.Cart;
 import com.example.twovn.model.Product;
 import com.example.twovn.service.CartService;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
@@ -141,8 +142,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
     }
-
-
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {
 
