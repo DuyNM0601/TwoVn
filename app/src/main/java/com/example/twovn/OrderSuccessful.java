@@ -1,11 +1,17 @@
 package com.example.twovn;
 
+import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,8 +19,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.twovn.adapter.CartAdapter;
+import com.example.twovn.adapter.OrderAdapter;
+import com.example.twovn.adapter.ProductAdapter;
 import com.example.twovn.model.Account;
+import com.example.twovn.model.Order;
+import com.example.twovn.model.OrderDetail;
+import com.example.twovn.model.Product;
 import com.example.twovn.repo.AccountRepository;
+import com.example.twovn.repo.OrderRepository;
+import com.example.twovn.repo.OrderDetailRepository;
+import com.example.twovn.repo.ProductRepository;
+import com.example.twovn.service.OrderDetailService;
+import com.example.twovn.service.OrderService;
+import com.example.twovn.service.ProductService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,15 +45,10 @@ import retrofit2.Response;
 public class OrderSuccessful extends Fragment {
 
     TextView nameText, phoneText, addressText;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
-
-
-    }
+    private RecyclerView recyclerView;
+    private OrderAdapter orderAdapter;
+    private List<OrderDetail> orderDetailList = new ArrayList<>();
+    TextView totalPriceText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,13 +58,19 @@ public class OrderSuccessful extends Fragment {
         nameText = view.findViewById(R.id.orderName);
         phoneText = view.findViewById(R.id.orderPhone);
         addressText = view.findViewById(R.id.orderAddress);
-        loadUserInfo();
-        // Inflate the layout for this fragment
+        recyclerView = view.findViewById(R.id.recyclerViewOrder);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        orderAdapter = new OrderAdapter(getContext(), orderDetailList);
+        recyclerView.setAdapter(orderAdapter);
+        totalPriceText = view.findViewById(R.id.totalPrice);
+        loadUserInfo(); // Load user information
+        fetchOrderAndDetails(); // Fetch order and order details
+
         return view;
     }
+
     private void loadUserInfo() {
-        // Lấy thông tin từ SharedPreferences
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySession", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySession", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", null);
 
         if (userId != null) {
@@ -57,18 +79,86 @@ public class OrderSuccessful extends Fragment {
                 public void onResponse(Call<Account> call, Response<Account> response) {
                     if (response.isSuccessful() && response.body() != null) {
                         Account account = response.body();
-                        nameText.setText(account.getUserName());
-                        phoneText.setText(account.getPhoneNumber());
-                        addressText.setText(account.getAddress());
+                        nameText.setText("Tên người mua: "+ account.getUserName());
+                        phoneText.setText("Số điện thoại: "+ account.getPhoneNumber());
+                        addressText.setText("Địa chỉ nhận hàng: "+ account.getAddress());
+
                     }
                 }
+
                 @Override
                 public void onFailure(Call<Account> call, Throwable t) {
-                    Log.e("Fail to load user info", "Error loading user info: " + t.getMessage());
+                    Log.e("OrderSuccessful", "Error loading user info: " + t.getMessage());
                 }
             });
         } else {
-            Log.e("Fail user info", "UserId is null");
+            Log.e("OrderSuccessful", "UserId is null");
+        }
+    }
+
+    private void fetchOrderAndDetails() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySession", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+
+        if (userId != null) {
+            OrderRepository.getOrderService().getOrdersByUserId(userId).enqueue(new Callback<Order[]>() {
+                @Override
+                public void onResponse(Call<Order[]> call, Response<Order[]> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+
+                        Order[] orders = response.body();
+
+                        if (orders.length > 0) {
+                            Order latestOrder = orders[orders.length - 1];
+                            String orderId = latestOrder.getId();
+
+                            OrderDetailRepository.getOrderDetailService().getOrderDetailsByOrderId(orderId).enqueue(new Callback<OrderDetail[]>() {
+                                @Override
+                                public void onResponse(Call<OrderDetail[]> call, Response<OrderDetail[]> response) {
+                                    if (response.isSuccessful() && response.body() != null) {
+                                        List<OrderDetail> orderDetails = new ArrayList<>();
+                                        double totalPrice = 0;
+                                        for (OrderDetail detail : response.body()) {
+                                            if (detail.getProductId() != null) {
+                                                orderDetails.add(detail);
+                                                totalPrice += detail.getPrice();
+                                                Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + detail.getPrice());
+
+                                            } else {
+                                                Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + detail.get_id());
+                                            }
+                                        }
+
+                                        orderDetailList.addAll(orderDetails);
+                                        orderAdapter.setOrderDetailList(orderDetailList);
+
+                                        totalPriceText.setText(String.format("%,.2f đ", totalPrice));
+
+                                    } else {
+                                        Log.e("OrderSuccessful", "Failed to get order details. Code: " + response.code());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<OrderDetail[]> call, Throwable t) {
+                                    Log.e("OrderSuccessful", "Failed to fetch order details: " + t.getMessage());
+                                }
+                            });
+                        } else {
+                            Log.e("OrderSuccessful", "No orders found");
+                        }
+                    } else {
+                        Log.e("OrderSuccessful", "Failed to get orders. Code: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Order[]> call, Throwable t) {
+                    Log.e("OrderSuccessful", "Failed to get orders: " + t.getMessage());
+                }
+            });
+        } else {
+            Log.e("OrderSuccessful", "UserId is null");
         }
     }
 }

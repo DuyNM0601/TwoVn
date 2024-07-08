@@ -49,6 +49,9 @@ public class Product implements Parcelable {
         }
     };
 
+    public Product(String name, String urlImg, double price) {
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(_id);

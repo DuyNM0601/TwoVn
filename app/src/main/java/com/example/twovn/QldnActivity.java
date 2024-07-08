@@ -13,7 +13,7 @@ public class QldnActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.qldh);
-        String[] tabTitles = {"Chờ thanh toán", "Đang giao hàng", "Hoàn thành"};
+        String[] tabTitles = { "Đang giao hàng", "Hoàn thành"};
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager2 viewPager2 = findViewById(R.id.viewPager);

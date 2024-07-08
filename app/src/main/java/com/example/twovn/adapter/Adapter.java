@@ -23,13 +23,11 @@ public class Adapter extends FragmentStateAdapter {
         switch (position) {
             case 0:
                 // Return a new instance of the fragment for the "Chờ thanh toán" tab
-                return new OrderSuccessful();
+                return new DangGiaoHangFragment();
             case 1:
                 // Return a new instance of the fragment for the "Đang giao hàng" tab
-                return new DangGiaoHangFragment();
-            case 2:
-                // Return a new instance of the fragment for the "Hoàn thành" tab
                 return new HoanThanhFragment();
+
             default:
                 return new Fragment();
         }
@@ -37,6 +35,6 @@ public class Adapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 2;
     }
 }
