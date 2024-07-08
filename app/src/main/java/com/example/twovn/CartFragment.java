@@ -107,7 +107,7 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
                                 cartItem.getImageUrl(),
                                 cartItem.getPrice()
                         );
-                        product.setQuantity(1); // Set the quantity from the cart item
+                        product.setQuantity(1);
                         cartProductList.add(product);
                     }
                     cartAdapter.notifyDataSetChanged();
