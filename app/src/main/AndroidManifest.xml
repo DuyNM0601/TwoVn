@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
 
     <application
         android:allowBackup="true"
@@ -21,7 +23,7 @@
         tools:targetApi="31">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCV4NdCBT6wPrNODodzF5htjx39zbGNd1M" />
+            android:value="YOUR_API_KEY" />
         <activity
             android:name=".OrderSummaryActivity"
             android:exported="false" />
@@ -30,7 +32,7 @@
             android:exported="false" />
         <activity
             android:name=".SignUpActivity"
-            android:exported="false" /> <!-- Activities của ứng dụng -->
+            android:exported="false" />
         <activity
             android:name=".PaymentActivity"
             android:exported="false" />
@@ -42,19 +44,17 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="twovn" />
+                <data android:scheme="twovn" android:host="qldn" />
             </intent-filter>
         </activity>
-        <activity android:name=".TtcnActivity" /> <!-- MainActivity với intent-filter để xử lý URL Scheme -->
+        <activity android:name=".TtcnActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

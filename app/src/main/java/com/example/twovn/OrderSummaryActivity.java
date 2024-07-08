@@ -35,6 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -184,15 +185,28 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
             String amountText = grandTotalTextView.getText().toString().trim();
             String amountString = amountText.replace(",", "").replace(" đ", ""); // Remove "," and " đ" characters
             if (!amountString.isEmpty()) {
-                processPayment(amountString);
+                List<String> productIds = new ArrayList<>();
+                for (Product product : cartProductList) {
+                    productIds.add(product.get_id());
+                }
+                processPayment(amountString, productIds);
             } else {
                 Toast.makeText(this, "Vui lòng nhập số tiền cần thanh toán", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void processPayment(String amount) {
-        long amountLong = (long) (Double.parseDouble(amount) * 100); // Amount in VND
+
+    private void processPayment(String amount, List<String> productIds) {
+        long amountLong = (long) (Double.parseDouble(amount) * 100);
+        SharedPreferences sharedPreferences = getSharedPreferences("MySession", MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+        Random random = new Random();
+        int orderCode = random.nextInt(900000) + 100000;
+
+        // Chuyển đổi danh sách productIds thành chuỗi
+        String productIdsString = android.text.TextUtils.join(",", productIds);
+        String redirectUrl = "twovn://qldn";
 
         VNPayUtils vnp = new VNPayUtils();
         vnp.addRequestData("vnp_Version", "2.1.0");
@@ -203,15 +217,16 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         vnp.addRequestData("vnp_CurrCode", "VND");
         vnp.addRequestData("vnp_IpAddr", "127.0.0.1");
         vnp.addRequestData("vnp_Locale", "vn");
-        vnp.addRequestData("vnp_OrderInfo", "Thanh toán đơn hàng");
+        vnp.addRequestData("vnp_OrderInfo", "Thanh toán đơn hàng" + orderCode);
         vnp.addRequestData("vnp_OrderType", "other");
-        vnp.addRequestData("vnp_ReturnUrl", "twovn://fragment_cart");
+        vnp.addRequestData("vnp_ReturnUrl", "https://computer-shop-steel.vercel.app/orders?accountId=" + userId + "&totalAmount=" + amountLong + "&redirectUrl=" + redirectUrl);
         vnp.addRequestData("vnp_TxnRef", String.valueOf(System.currentTimeMillis()));
 
         String paymentUrl = vnp.createRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", "ZVHGSYOLSXBEJFQXYMADKXQBXHUFPAEC");
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl));
         startActivity(browserIntent);
     }
+
 
     @Override
     protected void onResume() {
