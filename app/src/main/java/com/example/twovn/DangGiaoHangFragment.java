@@ -1,10 +1,12 @@
 package com.example.twovn;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.twovn.adapter.OrderAdapter;
@@ -28,39 +31,47 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class DangGiaoHangFragment extends Fragment {
 
     private RecyclerView recyclerViewOrder;
-    TextView totalPriceText;
-
     private OrderHistoryAdapter orderHistoryAdapter;
-    private OrderAdapter orderAdapter;
+    private List<OrderDetail> orderDetailList = new ArrayList<>();
+    private TextView totalAmountTextView;
+    private ImageView icHome;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
-    private List<OrderDetail> orderDetailList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
         View view = inflater.inflate(R.layout.fragment_dang_giao_hang, container, false);
-        View view2 = inflater.inflate(R.layout.item_order_history, container, false);
-        totalPriceText = view2.findViewById(R.id.textTotal);
+
         recyclerViewOrder = view.findViewById(R.id.recyclerViewDangGiaoHang);
-        orderAdapter = new OrderAdapter(getContext(), orderDetailList);
-        recyclerViewOrder.setLayoutManager(new LinearLayoutManager(getContext()));
+        totalAmountTextView = view.findViewById(R.id.totalAmountTextViewOrder);
+        icHome = view.findViewById(R.id.icHome);
+
         orderHistoryAdapter = new OrderHistoryAdapter(getContext(), new ArrayList<>());
+        recyclerViewOrder.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewOrder.setAdapter(orderHistoryAdapter);
+
+        icHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Replace DangGiaoHangFragment with HomepageFragment
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         fetchOrderHistory();
 
         return view;
     }
+
     private void fetchOrderHistory() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySession", Context.MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", null);
@@ -72,20 +83,15 @@ public class DangGiaoHangFragment extends Fragment {
                     if (response.isSuccessful() && response.body() != null) {
                         Order[] orders = response.body();
                         List<Order> pendingOrders = new ArrayList<>();
-                        double totalAmount = 0;
+                        final double[] totalAmount = {0}; // Use an array to hold the total amount
 
                         for (Order order : orders) {
                             if ("Pending".equals(order.getStatus())) {
                                 pendingOrders.add(order);
-                                totalAmount = order.getTotalAmount();
-                                totalPriceText.setText("Tổng tiền: " + order.getTotalAmount() + " đ");
-                                Log.d("OrderSuccessful", "Total amount: " + order.getTotalAmount());// Cộng dồn tổng số tiền// Cộng dồn tổng số tiền
                             }
                         }
 
                         if (!pendingOrders.isEmpty()) {
-                            // Set giá trị của TextView ở đây
-
                             for (Order order : pendingOrders) {
                                 String orderId = order.getId();
 
@@ -96,21 +102,18 @@ public class DangGiaoHangFragment extends Fragment {
                                             OrderDetail[] orderDetailsArray = response.body();
 
                                             if (orderDetailsArray.length > 0) {
-                                                OrderDetail firstDetail = orderDetailsArray[0];
-                                                if (firstDetail.getProductId() != null) {
-                                                    String productName = firstDetail.getProductId().getName();
-                                                    if (orderDetailsArray.length > 2) {
-                                                        productName += "...";
+                                                for (OrderDetail orderDetail : orderDetailsArray) {
+                                                    if (orderDetail.getProductId() != null) {
+                                                        orderDetailList.add(orderDetail);
+                                                        totalAmount[0] += orderDetail.getPrice() * orderDetail.getQuantity();
+                                                    } else {
+                                                        Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + orderDetail.get_id());
                                                     }
-                                                    firstDetail.getProductId().setName(productName);
-
-                                                    orderDetailList.add(firstDetail);
-
-                                                    // Cập nhật Adapter
-                                                    orderHistoryAdapter.setOrderDetailList(orderDetailList);
-                                                } else {
-                                                    Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + firstDetail.get_id());
                                                 }
+
+                                                // Update Adapter and total amount TextView
+                                                orderHistoryAdapter.setOrderDetailList(orderDetailList);
+                                                totalAmountTextView.setText(String.format("Tổng tiền: %,dđ", (int) totalAmount[0]));
                                             }
                                         } else {
                                             Log.e("OrderSuccessful", "Failed to get order details. Code: " + response.code());

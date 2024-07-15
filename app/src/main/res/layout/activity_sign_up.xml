@@ -96,5 +96,17 @@
                 app:cornerRadius="20dp"/>
 
         </LinearLayout>
+
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/signInText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:padding="8dp"
+        android:text="Đã có tài khoản ? Đăng nhập"
+        android:textAlignment="center"
+        android:textColor="#F4BF7E"
+        android:textSize="14sp" />
 </LinearLayout>

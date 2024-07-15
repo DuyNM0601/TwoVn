@@ -16,11 +16,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.twovn.R;
-import com.example.twovn.model.Order;
 import com.example.twovn.model.OrderDetail;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.OrderViewHolder> {
@@ -34,6 +32,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         this.total = total;
         notifyDataSetChanged();
     }
+
     public OrderHistoryAdapter(Context context, List<OrderDetail> orderDetailList) {
         this.context = context;
         this.orderDetailList = orderDetailList;
@@ -49,7 +48,6 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         OrderDetail orderDetail = orderDetailList.get(position);
-//        holder.textTotal.setText("Tổng tiền: " + total + " đ");
         String productName = orderDetail.getProductId().getName();
 
         if (orderDetailList.size() > 2) {
@@ -62,17 +60,14 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             spannableProductName.setSpan(new AbsoluteSizeSpan(15, true), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             holder.textViewTen.setText(spannableProductName);
-//            holder.textTotal.setText(String.format("Tổng tiền: %,.2f đ", total));
         } else {
             holder.textViewTen.setText(productName);
         }
 
-//        holder.textViewProductPrice.setText(String.format("%,.2f đ", orderDetail.getPrice()));
-//        holder.textViewProductQuantity.setText(String.valueOf(orderDetail.getQuantity()));
+        holder.textViewGia.setText("Giá: "+String.format("%,dđ", (int) orderDetail.getPrice()));
+        holder.textViewQuantity.setText("Số lượng: "+orderDetail.getQuantity());
         Picasso.get().load(orderDetail.getProductId().getUrlImg()).into(holder.imageView);
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -81,15 +76,14 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView textViewTen, textViewGia, textViewQuantity,textTotal;
+        TextView textViewTen, textViewGia, textViewQuantity;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
-            textViewTen = itemView.findViewById(R.id.textViewTen);
-            textViewGia = itemView.findViewById(R.id.textViewGia);
-            textViewQuantity = itemView.findViewById(R.id.textViewQuantity);
-            textTotal = itemView.findViewById(R.id.textTotal);
+            textViewTen = itemView.findViewById(R.id.textViewTenOrder);
+            textViewGia = itemView.findViewById(R.id.textPriceOrder);
+            textViewQuantity = itemView.findViewById(R.id.textViewQuantityOrder);
         }
     }
 

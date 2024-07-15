@@ -120,7 +120,9 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
 
             @Override
             public void onFailure(Call<List<Cart>> call, Throwable t) {
-                Toast.makeText(getContext(), "Failed to load cart products: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), LoginSignUpActivity.class);
+                startActivity(intent);
+                Toast.makeText(getContext(), "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -136,6 +138,12 @@ public class CartFragment extends Fragment implements CartAdapter.OnQuantityChan
             startActivity(intent);
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadCartProducts();
     }
 
     @Override

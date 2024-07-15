@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,13 +52,29 @@
             android:layout_marginLeft="8dp"
             android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/userAddressTextView"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Địa chỉ"
-            android:layout_marginLeft="8dp"
-            android:textSize="16sp" />
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/userAddressTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Địa chỉ"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtChangeProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chỉnh sửa thông tin"
+                android:textSize="16sp"
+                android:textColor="#2A4CC8"
+                android:gravity="end" />
+        </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

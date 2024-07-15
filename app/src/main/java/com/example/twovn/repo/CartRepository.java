@@ -94,7 +94,14 @@ public class CartRepository {
         // Implement local cart management if needed
     }
 
-    public void clearCart() {
-        // Implement clear cart if needed
+    public void clearCart(Callback<Void> callback) {
+        String userId = sharedPreferences.getString("userId", null);
+        if (userId != null) {
+            cartService.clearCart(userId).enqueue(callback);
+        } else {
+            // Handle case where user ID is not available
+            callback.onFailure(null, new Throwable("User not logged in"));
+        }
     }
+
 }

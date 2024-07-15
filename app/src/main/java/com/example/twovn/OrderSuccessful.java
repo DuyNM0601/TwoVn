@@ -5,6 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -48,7 +49,7 @@ public class OrderSuccessful extends Fragment {
     private RecyclerView recyclerView;
     private OrderAdapter orderAdapter;
     private List<OrderDetail> orderDetailList = new ArrayList<>();
-    TextView totalPriceText;
+    TextView totalPriceText, tv_donhang;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,9 +64,16 @@ public class OrderSuccessful extends Fragment {
         orderAdapter = new OrderAdapter(getContext(), orderDetailList);
         recyclerView.setAdapter(orderAdapter);
         totalPriceText = view.findViewById(R.id.totalPrice);
+        tv_donhang = view.findViewById(R.id.tv_donhang);
         loadUserInfo(); // Load user information
         fetchOrderAndDetails(); // Fetch order and order details
-
+        tv_donhang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), QldnActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
     }
 
@@ -121,18 +129,19 @@ public class OrderSuccessful extends Fragment {
                                         for (OrderDetail detail : response.body()) {
                                             if (detail.getProductId() != null) {
                                                 orderDetails.add(detail);
-                                                totalPrice += detail.getPrice();
-                                                Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + detail.getPrice());
+                                                totalPrice += (detail.getPrice() * detail.getQuantity());
+                                                Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + totalPrice);
 
                                             } else {
                                                 Log.e("OrderSuccessful", "Product ID is null for OrderDetail: " + detail.get_id());
                                             }
                                         }
+                                        totalPrice += 30000;
 
                                         orderDetailList.addAll(orderDetails);
                                         orderAdapter.setOrderDetailList(orderDetailList);
 
-                                        totalPriceText.setText(String.format("%,.2f đ", totalPrice));
+                                        totalPriceText.setText(String.format("%,dđ", (int) totalPrice));
 
                                     } else {
                                         Log.e("OrderSuccessful", "Failed to get order details. Code: " + response.code());

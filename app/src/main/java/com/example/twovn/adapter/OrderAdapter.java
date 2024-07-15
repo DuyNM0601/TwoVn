@@ -45,7 +45,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         holder.textViewTen.setText(orderDetail.getProductId().getName());
         holder.textViewGia.setText(String.format("%,.2f đ", orderDetail.getPrice()));
-        holder.textViewQuantity.setText(String.valueOf(orderDetail.getQuantity()));
+        holder.textViewQuantity.setText("Số lượng: "+orderDetail.getQuantity());
         Picasso.get().load(orderDetail.getProductId().getUrlImg()).into(holder.imageView);
     }
 

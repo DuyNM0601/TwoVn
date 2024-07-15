@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,9 +20,29 @@
         android:theme="@style/Theme.TwoVn"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".OrderSuccessActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="qldn"
+                    android:scheme="twovn" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".UserMessageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
+            android:value="AIzaSyCV4NdCBT6wPrNODodzF5htjx39zbGNd1M" />
+
         <activity
             android:name=".OrderSummaryActivity"
             android:exported="false" />
@@ -42,12 +61,6 @@
         <activity
             android:name=".QldnActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="twovn" android:host="qldn" />
-            </intent-filter>
         </activity>
         <activity android:name=".TtcnActivity" />
         <activity
@@ -55,6 +68,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

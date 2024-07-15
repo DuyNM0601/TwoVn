@@ -2,6 +2,9 @@ package com.example.twovn;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import com.example.twovn.model.Cart;
 import com.example.twovn.repo.CartRepository;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -39,6 +43,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MySession", Context.MODE_PRIVATE);
+        String role = sharedPreferences.getString("role", "user");
+
+        if ("admin".equals(role)) {
+            startActivity(new Intent(MainActivity.this, UserMessageActivity.class));
+            finish();
+            return;
+        }
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
@@ -65,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.navigation_giohang) {
                 selectedFragment = new CartFragment();
+            }else if (itemId == R.id.chat) {
+                Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                intent.putExtra("userId", "URSrrWSw8OfiBR29HwIbPlmNZ4m2");
+                intent.putExtra("name", "Cửa hàng TwoVn");
+                startActivity(intent);
             }
 
             if (selectedFragment != null) {
@@ -76,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         // Set default selection
         bottomNavigationView.setSelectedItemId(R.id.navigation_home);
     }
+
 
     private void checkCartAndNotify() {
         CartRepository cartRepository = CartRepository.getInstance(this);

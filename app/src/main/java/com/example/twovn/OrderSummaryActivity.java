@@ -1,5 +1,6 @@
 package com.example.twovn;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -53,7 +54,7 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
     private CartAdapter cartAdapter;
     private List<Product> cartProductList = new ArrayList<>();
     private TextView totalAmountTextView, shippingFeeTextView, grandTotalTextView;
-    private TextView userNameTextView, userEmailTextView, userPhoneNumberTextView, userAddressTextView;
+    private TextView userNameTextView, userEmailTextView, userPhoneNumberTextView, userAddressTextView, txtChangeProfile;
     private Button buttonPlaceOrder;
     private RadioGroup paymentMethodRadioGroup;
     private Spinner branchSpinner;
@@ -61,11 +62,11 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
     private GoogleMap googleMap;
 
     private final LatLng[] branchLocations = {
-            new LatLng(10.020326169782301, 105.7686582032475), // Chi nhánh 1
-            new LatLng(10.775438432508537, 106.69126500584572), // Chi nhánh 2
+            new LatLng(10.77391933567824, 106.68930109126615), // Chi nhánh 1
+            new LatLng(10.803783603842847, 106.68931218078278), // Chi nhánh 2
             new LatLng(10.831812226183368, 106.67848996138723), // Chi nhánh 3
             new LatLng(10.797866978837535, 106.64805823758375), // Chi nhánh 4
-            new LatLng(10.746600734218527, 106.62576577515718)  // Chi nhánh 5
+            new LatLng(10.84435644588202, 106.78139720651212)  // Chi nhánh 5
     };
 
     @Override
@@ -90,14 +91,22 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         userEmailTextView = findViewById(R.id.userEmailTextView);
         userPhoneNumberTextView = findViewById(R.id.userPhoneNumberTextView);
         userAddressTextView = findViewById(R.id.userAddressTextView);
+        txtChangeProfile = findViewById(R.id.txtChangeProfile);
 
         branchMapView.onCreate(savedInstanceState);
         branchMapView.getMapAsync(this);
 
-        String[] branches = {"Chi nhánh 1", "Chi nhánh 2", "Chi nhánh 3", "Chi nhánh 4", "Chi nhánh 5"};
+        String[] branches = {"CN1: 264A-264B-264C Nguyễn Thị Minh Khai, Phường 6, Quận 3, Hồ Chí Minh ", "CN2: 26 Phan Đăng Lưu, Phường 6, Bình Thạnh, Hồ Chí Minh", "CN3: 2A Nguyễn Oanh, Phường 7, Gò Vấp, Hồ Chí Minh", "CN4: 02 Hoàng Hoa Thám, Phường 13, Tân Bình, Hồ Chí Minh", "CN5: 164 Lê Văn Việt, Tăng Nhơn Phú B, Quận 9, Hồ Chí Minh"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, branches);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         branchSpinner.setAdapter(adapter);
+
+        txtChangeProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OrderSummaryActivity.this, TtcnActivity.class));
+            }
+        });
 
         branchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -128,10 +137,20 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeOrder();
+                String txtPhone = userPhoneNumberTextView.getText().toString();
+                String txtAddress = userAddressTextView.getText().toString();
+                if (txtPhone.isEmpty()){
+                    Toast.makeText(OrderSummaryActivity.this, "Vui lòng thêm số điện thoại", Toast.LENGTH_SHORT).show();
+                } else if (txtAddress.isEmpty()) {
+                    Toast.makeText(OrderSummaryActivity.this, "Vui lòng thêm địa chỉ", Toast.LENGTH_SHORT).show();
+                }else{
+                    placeOrder();
+                }
+
             }
         });
     }
+
 
     private void loadUserInfo() {
         // Lấy thông tin từ SharedPreferences
@@ -188,7 +207,13 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         String accountId = sharedPreferences.getString("userId", null);
 
         if (accountId != null && !cartProductList.isEmpty()) {
-            processOrder(accountId, cartProductList);
+            int selectedPaymentMethodId = paymentMethodRadioGroup.getCheckedRadioButtonId();
+            if (selectedPaymentMethodId == -1) {
+                Toast.makeText(OrderSummaryActivity.this, "Vui lòng chọn phương thức thanh toán", Toast.LENGTH_SHORT).show();
+            } else{
+                processOrder(accountId, cartProductList);
+            }
+
         } else {
             Toast.makeText(this, "Thông tin tài khoản hoặc giỏ hàng không hợp lệ", Toast.LENGTH_SHORT).show();
         }
@@ -215,26 +240,42 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (response.isSuccessful()) {
-                    // API process-order thành công, tiếp tục gọi processPayment
-                    int selectedPaymentMethodId = paymentMethodRadioGroup.getCheckedRadioButtonId();
-                    if (selectedPaymentMethodId == R.id.radioPaymentOnDelivery) {
-                        Toast.makeText(OrderSummaryActivity.this, "Đặt hàng thành công với phương thức thanh toán khi nhận hàng!", Toast.LENGTH_SHORT).show();
-                    } else if (selectedPaymentMethodId == R.id.radioPaymentWithVNPay) {
-                        String amountText = grandTotalTextView.getText().toString().trim();
-                        String amountString = amountText.replace(",", "").replace(" đ", ""); // Remove "," and " đ" characters
-                        if (!amountString.isEmpty()) {
-                            List<String> productIds = new ArrayList<>();
-                            for (Product product : cartProductList) {
-                                productIds.add(product.get_id());
-                            }
-                            processPayment(amountString, productIds);
-                        } else {
-                            Toast.makeText(OrderSummaryActivity.this, "Vui lòng nhập số tiền cần thanh toán", Toast.LENGTH_SHORT).show();
+                if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().has("paymentId")) {
+                        String paymentId = response.body().get("paymentId").getAsString();
+                        Log.d("payment idddddddddddddddddddđ", paymentId);
+                        String redirectUrl = "twovn://qldn";
+                        // Tạo URL vnp_ReturnUrl với paymentId
+                        String returnUrl = "https://computer-shop-steel.vercel.app/payments/success/" + paymentId + "?returnUrl=" + redirectUrl;
+                        int selectedPaymentMethodId = paymentMethodRadioGroup.getCheckedRadioButtonId();
+                        if (selectedPaymentMethodId == R.id.radioPaymentOnDelivery) {
+
+                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(returnUrl));
+                            startActivity(browserIntent);
+                            clearCart();
+                            Toast.makeText(OrderSummaryActivity.this, "Đặt hàng thành công với phương thức thanh toán khi nhận hàng!", Toast.LENGTH_SHORT).show();
                         }
+                        else if (selectedPaymentMethodId == R.id.radioPaymentWithVNPay) {
+                            // Tiếp tục với thanh toán VNPay
+                            String amountText = grandTotalTextView.getText().toString().trim();
+                            String amountString = amountText.replace(",", "").replace(" đ", ""); // Remove "," and " đ" characters
+                            if (!amountString.isEmpty()) {
+                                List<String> productIds = new ArrayList<>();
+                                for (Product product : cartProductList) {
+                                    productIds.add(product.get_id());
+                                }
+                                clearCart();
+                                processPayment(amountString, productIds, returnUrl); // Truyền returnUrl vào hàm processPayment
+                            } else {
+                                Toast.makeText(OrderSummaryActivity.this, "Vui lòng nhập số tiền cần thanh toán", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     } else {
-                        Toast.makeText(OrderSummaryActivity.this, "Xử lý đơn hàng thất bại!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OrderSummaryActivity.this, "Không tìm thấy paymentId trong phản hồi từ server", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(OrderSummaryActivity.this, "Không thể xử lý đơn hàng, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -245,7 +286,35 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         });
     }
 
-    private void processPayment(String amount, List<String> productIds) {
+    private void clearCart() {
+        CartRepository cartRepository = CartRepository.getInstance(getApplicationContext());
+        SharedPreferences sharedPreferences = getSharedPreferences("MySession", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("userId", null);
+        if (userId != null) {
+            cartRepository.clearCart(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        // Cart cleared successfully
+                    } else {
+                        // Handle unsuccessful response
+                        Toast.makeText(OrderSummaryActivity.this, "Không thể xóa giỏ hàng", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    // Handle failure
+                    Toast.makeText(OrderSummaryActivity.this, "Lỗi khi xóa giỏ hàng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(OrderSummaryActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void processPayment(String amount, List<String> productIds, String returnUrl) {
         long amountLong = (long) (Double.parseDouble(amount) * 100);
         SharedPreferences sharedPreferences = getSharedPreferences("MySession", MODE_PRIVATE);
         String userId = sharedPreferences.getString("userId", null);
@@ -267,13 +336,14 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
         vnp.addRequestData("vnp_Locale", "vn");
         vnp.addRequestData("vnp_OrderInfo", "Thanh toán đơn hàng" + orderCode);
         vnp.addRequestData("vnp_OrderType", "other");
-        vnp.addRequestData("vnp_ReturnUrl", "https://computer-shop-steel.vercel.app/payments/success/668a6a12c8c98231c6f9cdaa?returnUrl=" + redirectUrl);
+        vnp.addRequestData("vnp_ReturnUrl", returnUrl);
         vnp.addRequestData("vnp_TxnRef", String.valueOf(System.currentTimeMillis()));
-
         String paymentUrl = vnp.createRequestUrl("https://sandbox.vnpayment.vn/paymentv2/vpcpay.html", "ZVHGSYOLSXBEJFQXYMADKXQBXHUFPAEC");
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(paymentUrl));
         startActivity(browserIntent);
     }
+
+
 
     // Interface cho Retrofit
     public interface OrderService {
@@ -285,6 +355,7 @@ public class OrderSummaryActivity extends AppCompatActivity implements OnMapRead
     protected void onResume() {
         super.onResume();
         branchMapView.onResume();
+        loadUserInfo();
     }
 
     @Override

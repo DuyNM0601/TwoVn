@@ -1,173 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".OrderSuccessful">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
+        android:id="@+id/order_success_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_height="220dp"
+        android:background="#4CAF50"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/order_success_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="30dp">
 
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:background="@drawable/ordersuccessful_bg"
-            android:orientation="vertical">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="30dp"
-                >
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="30dp"
-
-                android:src="@drawable/ordersuccessfull_check"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/check"
                 android:layout_marginTop="50dp"
-                android:layout_marginLeft="70dp"
-                />
+                android:layout_marginLeft="70dp"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Đặt hàng thành công"
-                android:textSize="20dp"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
                 android:layout_marginTop="50dp"
-                />
-
-            </LinearLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Cảm ơn bạn đã đặt hàng, Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất"
-                android:textSize="14dp"
-                android:textColor="#5E5B5B"
-                android:layout_marginTop="30dp"
-
-                android:gravity="center"
-
-                />
-
+                android:layout_marginLeft="10dp"
+                android:text="Đặt hàng thành công"
+                android:textColor="#FFFFFF"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"/>
         </LinearLayout>
-        <LinearLayout
+
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Thông tin đơn hàng"
-                android:textSize="20dp"
-                android:textColor="#938D8D"
-                android:background="#D5D0D0"
-
-                android:textStyle="bold"
-                />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <androidx.recyclerview.widget.RecyclerView
-
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:id="@+id/recyclerViewOrder"
-                    android:scrollbarSize="20dp"
-                    />
-
-
-
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tổng tiền:"
-                    android:textSize="15dp"
-                    android:textColor="#938D8D"
-                    android:layout_marginLeft="20dp"
-                    />
-                <TextView
-                    android:id="@+id/totalPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="100.000.000"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="10dp"
-                    />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Thông tin nhận hàng"
-                    android:textSize="20dp"
-                    android:textColor="#938D8D"
-                    android:background="#D5D0D0"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="10dp">
-                <TextView
-                    android:id="@+id/orderName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tên"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="20dp"
-
-                    />
-                <TextView
-                    android:id="@+id/orderPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="SDT"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="20dp"
-
-                    />
-                <TextView
-                    android:id="@+id/orderAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dia chi"
-                    android:textSize="15dp"
-                    android:textColor="@color/black"
-                    android:layout_marginLeft="20dp"
-                    />
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:lineHeight="22dp"
+            android:paddingHorizontal="8dp"
+            android:text="Cảm ơn đã đặt hàng, Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất"
+            android:textColor="#FFFFFF"
+            android:textSize="16dp"
+            android:textStyle="italic" />
     </LinearLayout>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/order_info_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="#F3F2F1"
+        android:text="Thông tin đơn hàng"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:paddingLeft="12dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shipping_info_layout" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:scrollbarSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/order_info_title" />
+
+    <LinearLayout
+        android:id="@+id/total_price_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.917"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recyclerViewOrder">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:paddingRight="8dp"
+            android:text="Tổng tiền:"
+            android:textColor="#000000"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/totalPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="100.000.000"
+            android:textColor="@color/black"
+            android:textSize="18dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/shipping_info_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="224dp"
+        android:background="#F3F2F1"
+        android:text="Thông tin nhận hàng"
+        android:textColor="#000000"
+        android:textSize="20dp"
+        android:paddingLeft="12dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/shipping_info_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/shipping_info_title">
+
+        <TextView
+            android:id="@+id/orderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:paddingBottom="8dp"
+            android:text="Tên"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/orderPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:paddingBottom="8dp"
+            android:text="SĐT"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/orderAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:paddingBottom="8dp"
+            android:text="Địa chỉ"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_donhang"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginBottom="32dp"
+        android:text="Theo dõi đơn hàng"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.574"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/icon_follow_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.278"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

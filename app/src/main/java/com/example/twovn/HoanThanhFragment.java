@@ -32,7 +32,6 @@ import retrofit2.Response;
 public class HoanThanhFragment extends Fragment {
 
     private RecyclerView recyclerViewOrder;
-    TextView totalPriceText;
 
     private OrderHistoryAdapter orderHistoryAdapter;
     private OrderAdapter orderAdapter;
@@ -50,7 +49,6 @@ public class HoanThanhFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_hoan_thanh, container, false);
         View view2 = inflater.inflate(R.layout.item_order_history, container, false);
-        totalPriceText = view2.findViewById(R.id.textTotal);
         recyclerViewOrder = view.findViewById(R.id.recyclerViewHoanThanh);
         orderAdapter = new OrderAdapter(getContext(), orderDetailList);
         recyclerViewOrder.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -78,7 +76,6 @@ public class HoanThanhFragment extends Fragment {
                             if ("Shipped".equals(order.getStatus())) {
                                 pendingOrders.add(order);
                                 totalAmount += order.getTotalAmount();
-                                totalPriceText.setText("Tổng tiền: " + order.getTotalAmount() + " đ");
                                 Log.d("OrderSuccessful", "Total amount: " + order.getTotalAmount());// Cộng dồn tổng số tiền// Cộng dồn tổng số tiền
                             }
                         }

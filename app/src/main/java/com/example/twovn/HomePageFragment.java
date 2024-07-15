@@ -41,9 +41,9 @@ public class HomePageFragment extends Fragment {
 
         viewPager = view.findViewById(R.id.viewPager);
         List<Integer> imageList = new ArrayList<>();
-        imageList.add(R.drawable.banner);
-        imageList.add(R.drawable.image4);
-        imageList.add(R.drawable.image3);
+        imageList.add(R.drawable.banner1);
+        imageList.add(R.drawable.banner3);
+        imageList.add(R.drawable.banner2);
 
         ImagePagerAdapter pagerAdapter = new ImagePagerAdapter(getContext(), imageList);
         viewPager.setAdapter(pagerAdapter);

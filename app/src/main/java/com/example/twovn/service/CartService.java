@@ -21,4 +21,6 @@ public interface CartService {
     Call<Product> getProductById(@Path("id") String productId);
     @DELETE("/cart/{accountId}/{productId}")
     Call<Void> deleteCartItem(@Path("accountId") String accountId, @Path("productId") String productId);
+    @DELETE("/cart/account/{accountId}")
+    Call<Void> clearCart(@Path("accountId") String accountId);
 }

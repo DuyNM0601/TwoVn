@@ -7,9 +7,34 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewDangGiaoHang"
         android:layout_width="match_parent"
         android:layout_height="700dp" />
+
+    <ImageView
+        android:id="@+id/icHome"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="200dp"
+        android:layout_marginTop="690dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:elevation="10dp"
+        android:src="@drawable/homepage" />
+
+    <TextView
+        android:id="@+id/totalAmountTextViewOrder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total Amount"
+        android:textSize="20sp"
+        android:background="#F3BA5A"
+        android:textColor="#ffffff"
+        android:padding="10dp"
+        android:layout_marginTop="730dp"
+        android:textStyle="bold"
+        android:paddingVertical="8dp" />
 
 </FrameLayout>
